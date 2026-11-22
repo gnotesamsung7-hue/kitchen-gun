@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -13,15 +14,29 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.Locale;
+
 /** Kitchen Gun: full-screen WebView that runs the game from app assets (works offline). */
 public class MainActivity extends Activity {
 
     private WebView web;
+    private TextToSpeech tts;
+    private volatile boolean ttsReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Voice for Nib's "KITCHEN GUN!" shout
+        tts = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                tts.setLanguage(Locale.US);
+                tts.setPitch(0.7f);
+                tts.setSpeechRate(1.15f);
+                ttsReady = true;
+            }
+        });
 
         web = new WebView(this);
         WebSettings s = web.getSettings();
@@ -65,6 +80,13 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public boolean speak(String text) {
+            if (!ttsReady || tts == null) return false;
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "kitchengun");
+            return true;
+        }
+
+        @JavascriptInterface
         public void exit() {
             runOnUiThread(MainActivity.this::finish);
         }
@@ -105,6 +127,13 @@ public class MainActivity extends Activity {
         super.onResume();
         if (web != null) web.onResume();
         hideSystemUi();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tts != null) { tts.stop(); tts.shutdown(); }
+        if (web != null) web.destroy();
+        super.onDestroy();
     }
 
     @Override
