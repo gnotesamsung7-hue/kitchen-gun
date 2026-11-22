@@ -22,12 +22,23 @@ canvas#c{display:block;position:fixed;left:0;top:0;width:100%;height:100%;cursor
 .opts{display:flex;flex-direction:column;max-width:260px;min-width:200px}.chk{font-size:22px;font-weight:700;margin:4px}.chk input{width:22px;height:22px;vertical-align:middle}
 .cls{display:flex;flex-wrap:wrap}#armList{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .arm{background:#f3e8c8;border:2px solid #24378f;border-radius:10px 4px 12px 5px;padding:6px;width:210px;text-align:center}.arm img{width:180px;height:90px;display:block;margin:0 auto}.arm b{font-size:22px}.arm .d{font-size:16px;color:#1b1b26}.arm button{font-size:17px;padding:2px 8px}.arm.eq{border-color:#b5222c;box-shadow:0 0 0 2px #b5222c}
+.stabs{display:flex;flex-wrap:wrap}#sList{max-height:62vh;overflow:auto;margin-top:4px;padding-right:4px}
+.srow{display:flex;flex-wrap:wrap;align-items:center;gap:2px;border-bottom:1.5px dashed rgba(36,55,143,.4);padding:5px 0}
+.srow .lb{flex:1 1 230px;font-size:20px;font-weight:700;color:#1b1b26}.srow .lb small{display:block;font-size:15px;font-weight:500;color:#24378f}
+.chip{font-size:15px;padding:0 8px;border-radius:9px;background:#24378f;color:#f3e8c8;margin-right:4px}.chip.def{background:transparent;color:#24378f;border:1px dashed #24378f}
+.srow button{font-size:17px!important;padding:2px 9px!important}.srow select{font-size:15px!important;padding:2px 4px!important}.recon{background:#b5222c!important;color:#f3e8c8!important;border-color:#b5222c!important}
+.ttsed{flex-basis:100%;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.ttsed input{flex:1 1 220px}
+.setrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:20px;padding:8px 0;border-bottom:1.5px dashed rgba(36,55,143,.4)}.setrow input[type=range]{width:200px}
 @media (max-height:520px){.ov button,.ov select,.ov input{font-size:16px;padding:2px 8px}.ttl{font-size:24px}.card h2{font-size:26px}.chk{font-size:18px}.tip,.hint{font-size:15px}.card img{width:min(48vmin,220px)}}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="share" class="ov hidden"><div class="card"><h2>Share KITCHEN GUN</h2><img id="qrimg" alt="QR code to play Kitchen Gun" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASgAAAEoCAIAAABkZftOAAAFPElEQVR42u3dzW3eSgyG0ddBukkTqSMFpo4s3UB68N4NpALHEDAUSfmc9b3++eIHEkBw5uX97TXAvb75CEB4IDxAeCA8QHggPEB4IDxAeCA8EB4gPBAeIDzY5vvV/+HHz98rfrG/f361/PxXv+9H//3Vz/+rfd8tf2+eeOBVE4QHCA+EBwgPhAfkpjleDs0xTrk65zn1c56aL12dd3X9/Fe/b/V8b8vfmyceeNUE4QHCA+EBwgPhAWme46V47lE9t6mep53aD6z+PD/6+lv24rb8vXnigVdNEB4gPBAeIDwQHpDmOV4eOuc5tc9WPS+q3nPr2of0xAOEB8IDhAfCA+EBwoOY45GvM880Z/PEA+EBwgPhAcID4QHCg3yJOd72uVD1vlnX13/q/XVb/t488UB4IDxAeCA8QHggPCA3zfG23J+WQ/fFdc3Btu/Rnfr5t/+9eeKB8EB4gPBAeIDwQHjAJ17e317jPMms3xOb9ns5t9MTD4QHCA+EB8IDhAfCA3LrPl71fObU/luWzNm2/F6nfp5pe3TV55R64oFXTRAeIDwQHiA8EB6Qm/bxqudLXecubtkr+2pzy2lzyFM/jyceeNUE4QHCA+EBwgPhAbnpfrwcmnuc2k+r/jpZMkeatv+2ZR+v+uf0xAOvmiA8QHggPEB4IDwgh+d40/a4snwedXWOdPXzObX/Vv3vUv3vO+3vxxMPhAfCA4QHwgOEB8IDctP9eHF+5qNVzwO79vfcjwdeNQHhgfAA4YHwAOFB3I+XyfOl7fcBTpuDTdv3m7b/6YkHXjVBeIDwQHiA8EB4QJrP1azelzu133XqHr9Tn0PXOZbT9hK75oHVn4MnHnjVBOEBwgPhAcID4QEZuo936tzFrr217XuA0z6fDNvn9MQDr5qA8EB4gPBAeIDwIMv28TLsnrHq+9m69taq52Bd53lO+/e1jwdeNQHhgfAA4YHwAOFBHrKP16VrnpNhe1xPvXdu2j2B7scDr5qA8EB4gPBAeIDwIA/Zx9uyF9d17mXXHtq0/bdp+3LO1QSvmoDwQHiA8EB4gPAg9vEy+f63LNkzfOpc8al7hp544FUThAcID4QHCA+EB+SmOV7X+ZZd52dW/5zT9gan3Ys4bc/Q/XjgVRMQHggPEB4ID4QHZNkcL8Xzt679tC33vFXPtbZ/ztP2Pz3xwKsmCA8QHggPEB4ID8jh+/Gm7YNNm2tl+fmcW+61mzZn9sQDr5qA8EB4IDxAeCA8IMvux5t2LmKG3bO35fzMp5532jVv9MQDr5ogPEB4IDxAeCA8IMvO1ew61/Gp+2Nd88Bp871p52164oFXTRAeIDwQHiA8EB6Q5nM1p32drnM+u+ZLV+d7XXuJ087/dD8eeNUEhAfCA4QHwgOEB1k2x5t2XmIOzVuq51fVc6pT88Bp9wRuOZfVEw+8agLCA+GB8ADhgfCANM/xsuR+uS3nK1afC7p9vte1t1n9e3nigVdNEB4gPBAeIDwQHpCb5nhpum+ta+63Za9sy/11XeedVt836IkHXjVBeIDwQHiA8EB4QIbO8bLkvM2n7qdNm49tmSvaxwOvmoDwQHiA8EB4gPAg5njZON+rPqdx2vfFEw+EBwgPhAcID4QHwgPyqDle1715KT7XsWsfr/qc0lPzzOp54Ja/K088EB4IDxAeCA8QHggPSPMcb8seV/U9aV3/fZacV5nl9yKemt964oFXTRAeIDwQHiA8EB7wiZf3t1efAnjigfAA4YHwAOGB8ADhgfBAeD4CEB4IDxAeCA8QHggP+L9/9IrmRwa5wvIAAAAASUVORK5CYII="><p class="url" id="qrurl"></p><div class="row"><button id="copyBtn">Copy link</button><button class="x" data-close>Close</button></div><p class="tip">Long-press (phone) or right-click (computer) the QR code to save it.<br>Scan it with any phone camera to play.</p></div></div>
+<div id="sound" class="ov hidden"><div class="sp">
+ <div class="top"><span class="ttl">♪ Sound Studio</span><div class="stabs" id="sTabs"></div><button class="x big" data-close>Done ✓</button></div>
+ <p class="hint" id="sHint"></p><div id="sList"></div><p class="msg" id="sMsg"></p><input type="file" id="sFile" accept="audio/*" class="hidden">
+</div></div>
 <div id="studio" class="ov hidden"><div class="sp">
  <div class="top"><span class="ttl">✎ Art Studio</span><div class="tabs"><button data-tab="hero" class="on">My Stickman</button><button data-tab="weapon">New Weapon / Drone</button><button data-tab="armory">Armory</button></div><button class="x big" data-close>Done ✓</button></div>
  <div id="drawPane"><div class="tools"><span class="lbl">pen</span><button data-w="2">fine</button><button data-w="4" class="on">med</button><button data-w="8">bold</button><span class="lbl">ink</span><button data-c="0" class="sw b on" title="blue"></button><button data-c="1" class="sw k" title="black"></button><button data-c="2" class="sw r" title="red"></button><button id="undoB">↶ undo</button><button id="clrB">clear</button></div>
@@ -106,10 +117,10 @@ const OPT_KEY='kitchengun_opts_v1';let OPT={auto:('ontouchstart' in window)&&mat
 function saveOpt(){try{localStorage.setItem(OPT_KEY,JSON.stringify(OPT))}catch(e){}}
 let muted=OPT.muted;
 function toggleAuto(){OPT.auto=!OPT.auto;saveOpt();if(G)toast('Auto-shoot '+(OPT.auto?'ON — Nib aims & fires by himself':'OFF — you aim & fire'))}const sfxLast={};
-function initAudio(){if(AC){if(AC.state==='suspended')AC.resume().catch(()=>{});return}try{AC=new(window.AudioContext||window.webkitAudioContext)();const n=AC.sampleRate;NB=AC.createBuffer(1,n,n);const d=NB.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1}catch(e){AC=null}}
+function initAudio(){if(AC){if(AC.state==='suspended')AC.resume().catch(()=>{});return}try{AC=new(window.AudioContext||window.webkitAudioContext)();setTimeout(()=>{try{preloadVO()}catch(e){}},50);const n=AC.sampleRate;NB=AC.createBuffer(1,n,n);const d=NB.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1}catch(e){AC=null}}
 function noise(dur,freq,type,vol,fEnd){const s=AC.createBufferSource();s.buffer=NB;const f=AC.createBiquadFilter();f.type=type;f.frequency.value=freq;const g=AC.createGain();const t=AC.currentTime;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);if(fEnd)f.frequency.exponentialRampToValueAtTime(fEnd,t+dur);s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t,Math.random()*.5);s.stop(t+dur)}
 function tone(freq,dur,type,vol,fEnd,delay=0){const o=AC.createOscillator(),g=AC.createGain();const t=AC.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);if(fEnd)o.frequency.exponentialRampToValueAtTime(fEnd,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur+.02)}
-function sfx(k){if(!AC||muted)return;const now=AC.currentTime;if(sfxLast[k]&&now-sfxLast[k]<.045)return;sfxLast[k]=now;try{switch(k){
+function sfx(k){if(!AC||muted)return;const now=AC.currentTime;if(sfxLast[k]&&now-sfxLast[k]<.045)return;sfxLast[k]=now;if(typeof VOCFG!=='undefined'&&VOCFG.cues['sfx_'+k]){vo('sfx_'+k);return}try{switch(k){
  case'pistol':noise(.12,1800,'bandpass',.45,600);tone(220,.08,'square',.05,80);break;
  case'shotgun':noise(.3,900,'lowpass',.8,200);tone(120,.15,'square',.1,40);break;
  case'smg':noise(.06,2200,'bandpass',.3,900);break;
@@ -508,14 +519,14 @@ function spawnPos(minD=200){const rx=W/2/ZOOM*.88,ry=H/2/ZOOM*.88;for(let k=0;k<
 const recCount=()=>allies.filter(a=>a.rec).length;
 const barrierOn=()=>!G.flags.boss&&recCount()<3;
 
-function hurtP(d){if(P.dead||P.inv>0||P.dashT>0)return;P.hp-=d;P.inv=.45;G.shake=Math.max(G.shake,5);sfx('hurt');addStain(P.x+rnd(-8,8),P.y+rnd(-4,4),'R',.6,25);inkBurst(P.x,P.y,6,RED,120);G.hurtFlash=.35;
-  if(P.hp<=0){P.hp=0;P.dead=true;G.state='dead';G.deadT=0;P.firing=false;sfx('die');for(let i=0;i<4;i++)addStain(P.x+rnd(-20,20),P.y+rnd(-10,10),'R',1.2,60)}}
+function hurtP(d){if(P.dead||P.inv>0||P.dashT>0)return;P.hp-=d;P.inv=.45;G.shake=Math.max(G.shake,5);sfx('hurt');if(P.hp>0)voT('nib_hurt',3);addStain(P.x+rnd(-8,8),P.y+rnd(-4,4),'R',.6,25);inkBurst(P.x,P.y,6,RED,120);G.hurtFlash=.35;
+  if(P.hp<=0){P.hp=0;P.dead=true;G.state='dead';G.deadT=0;P.firing=false;sfx('die');vo('nib_dead');for(let i=0;i<4;i++)addStain(P.x+rnd(-20,20),P.y+rnd(-10,10),'R',1.2,60)}}
 function hurtA(a,d){if(a.down)return;a.hp-=d;a.hit=.12;if(a.hp<=0){a.hp=0;a.down=true;a.rev=0;toast(`${a.name} is down! Stand next to them to revive.`)}}
 function hurtZ(z,d,vx,vy,own){if(z.dead)return;let crit=false;if(own==='p'&&Math.random()<critC()){d*=2;crit=true}const zt=ZT[z.type];if(zt.armor){d*=1-zt.armor;if(Math.random()<.5)addPart(z.x,z.y,rnd(-80,80),rnd(-80,0),.25,RED,1,'spark',26)}
   z.hp-=d;z.hit=.1;const vl=Math.hypot(vx,vy)||1;if(z.type!=='brute'&&z.state!=='emerge'){z.x+=vx/vl*Math.min(10,d*.25);z.y+=vy/vl*Math.min(10,d*.25)}
   floater(z.x+rnd(-6,6),z.y-40,Math.round(d)+(crit?'!':''),crit?RED:BLK,crit?24:17);inkBurst(z.x,z.y,crit?7:3,BLK,140);sfx('hit');
   if(z.hp<=0)killZ(z)}
-function killZ(z){if(z.dead)return;z.dead=true;G.kills++;const t=ZT[z.type];if(t.f==='r')G.flags.kr=(G.flags.kr||0)+1;else if(t.f==='a')G.flags.ka=(G.flags.ka||0)+1;if(!G.kgT)G.power=Math.min(100,(G.power||0)+1.4+t.xp*.3);let xp=t.xp*(1+.05*(G.level-1));const n=Math.min(6,Math.ceil(xp/5));for(let i=0;i<n;i++)orbs.push({x:z.x+rnd(-10,10),y:z.y+rnd(-6,6),v:xp/n,vx:rnd(-80,80),vy:rnd(-60,60),t:0});
+function killZ(z){if(z.dead)return;z.dead=true;G.kills++;const t=ZT[z.type];if(t.f==='r')G.flags.kr=(G.flags.kr||0)+1;else if(t.f==='a')G.flags.ka=(G.flags.ka||0)+1;if(!G.kgT)G.power=Math.min(100,(G.power||0)+1.4+t.xp*.3);if(VOCFG.quip&&Math.random()<VOCFG.quip)voT('nib_kill',5);let xp=t.xp*(1+.05*(G.level-1));const n=Math.min(6,Math.ceil(xp/5));for(let i=0;i<n;i++)orbs.push({x:z.x+rnd(-10,10),y:z.y+rnd(-6,6),v:xp/n,vx:rnd(-80,80),vy:rnd(-60,60),t:0});
   const r=Math.random();if(r<.085)drops.push({x:z.x,y:z.y,k:'ammo',t:0});else if(r<.125)drops.push({x:z.x,y:z.y,k:'heart',t:0});
   if(t.f==='r'){addStain(z.x,z.y,'K',t.s*.7,40);for(let i=0;i<9;i++)addPart(z.x,z.y,rnd(-140,140),rnd(-100,40),.7,BLK,2.5,'bolt',18+rnd(0,22));inkBurst(z.x,z.y,6,RED,160);sfx('clank')}
   else if(t.f==='g'){inkBurst(z.x,z.y,16,ink(.45),130,30);sfx('woo')}
@@ -549,7 +560,7 @@ function updateDrone(dt){const a=droneArt();if(!a||P.dead){P.drone=null;return}c
   if(!T&&boss&&!boss.dead&&dist(D.x,D.y,boss.x,boss.y)<pr.range+boss.r)T={x:boss.x,y:boss.y-30};
   if(T){D.aim=Math.atan2(T.y-D.y,T.x-D.x);if(D.cd<=0){D.cd=pr.rate/rofMul();const an=D.aim+rnd(-.04,.04);bullets.push({x:D.x,y:D.y,vx:Math.cos(an)*pr.spd,vy:Math.sin(an)*pr.spd,dmg:pr.dmg*pDmgMul()*(1+.04*(G.level-1)),life:pr.range*1.15/pr.spd,pierce:1,own:'d',ex:pr.ex||0,hit:[],w:'drone'});sfx(pr.ex?'launcher':'laserP')}}}
 function dash(){if(P.dashCd>0||P.dashT>0||P.dead)return;let dx=0,dy=0;if(touchMode&&stickL.on){dx=stickL.dx;dy=stickL.dy}else{if(keys.KeyW||keys.ArrowUp)dy-=1;if(keys.KeyS||keys.ArrowDown)dy+=1;if(keys.KeyA||keys.ArrowLeft)dx-=1;if(keys.KeyD||keys.ArrowRight)dx+=1}
-  if(Math.hypot(dx,dy)<.1){dx=Math.cos(P.aim);dy=Math.sin(P.aim)}const l=Math.hypot(dx,dy);P.ddx=dx/l;P.ddy=dy/l;P.dashT=.18;P.dashCd=dashCdV();P.inv=.25;P.dashHit=[];sfx('scratch')}
+  if(Math.hypot(dx,dy)<.1){dx=Math.cos(P.aim);dy=Math.sin(P.aim)}const l=Math.hypot(dx,dy);P.ddx=dx/l;P.ddy=dy/l;P.dashT=.18;P.dashCd=dashCdV();voT('nib_dash',1.5);P.inv=.25;P.dashHit=[];sfx('scratch')}
 function nearestAllyToTalk(){let best=null,bd=95;for(const a of allies){if(a.rec||(a.secret&&a.secret!=='corner'))continue;const d=dist(P.x,P.y,a.x,a.y);if(d<bd){bd=d;best=a}}return best}
 function interact(){const a=nearestAllyToTalk();if(a)recruit(a)}
 function collide(e,r){for(let it=0;it<2;it++){const o=obstAny(e.x,e.y,o=>(o.x-e.x)**2+(o.y-e.y)**2<(o.r+r)**2);if(!o)break;const dx=e.x-o.x,dy=e.y-o.y,d=Math.hypot(dx,dy)||1,push=o.r+r-d;e.x+=dx/d*push;e.y+=dy/d*push}e.x=clamp(e.x,40,WORLD-40);e.y=clamp(e.y,40,WORLD-40)}
@@ -604,7 +615,7 @@ function updateAllies(dt){
 }
 function superWanted(a){if(boss&&!boss.dead&&boss.state!=='rise'&&dist(P.x,P.y,boss.x,boss.y)<900)return true;if(a.id==='scrawl'&&(P.hp<P.maxHp*.5||allies.some(b=>b.rec&&b.down)))return true;let n=0;for(const z of zombies){if(!z.dead&&z.state==='walk'&&dist(P.x,P.y,z.x,z.y)<620)n++}return n>=(a.id==='scrawl'?6:2)}
 function visibleEnemies(maxD=99999,from=P){const vw=W/ZOOM/2+40,vh=H/ZOOM/2+60;return zombies.filter(z=>!z.dead&&Math.abs(z.x-G.camX)<vw&&Math.abs(z.y-G.camY)<vh+30&&dist(from.x,from.y,z.x,z.y)<maxD)}
-function doSuper(a,am){const sup=AD[a.id].sup;G.superCall={name:sup.name,who:a.name,t:1.8};floater(a.x,a.y-60,sup.name+'!',RED,24);G.shake=Math.max(G.shake,6);sfx('superup');
+function doSuper(a,am){const sup=AD[a.id].sup;vo('sup_'+a.id);G.superCall={name:sup.name,who:a.name,t:1.8};floater(a.x,a.y-60,sup.name+'!',RED,24);G.shake=Math.max(G.shake,6);sfx('superup');
   switch(a.id){
    case'doodle':for(let w=0;w<2;w++)for(let i=0;i<28;i++){const an=i/28*6.283+w*.11,sp=900-w*200;bullets.push({x:a.x,y:a.y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,dmg:34*am,life:.75,pierce:3,own:'a',ex:0,hit:[],w:'pistol'})}sfx('smg');break;
    case'smudge':{const R0=230;for(const z of zombies){if(z.dead)continue;const d=dist(a.x,a.y,z.x,z.y);if(d<R0){hurtZ(z,150*am,z.x-a.x,z.y-a.y,'a');if(!z.dead&&!ZT[z.type].armor){const l=d||1;z.x+=(z.x-a.x)/l*90;z.y+=(z.y-a.y)/l*90}}}if(boss&&!boss.dead&&dist(a.x,a.y,boss.x,boss.y)<R0+boss.r)hurtBoss(180*am);parts.push({x:a.x,y:a.y,vx:0,vy:0,life:.5,max:.5,kind:'ring',size:R0,col:INK,h:0});for(let i=0;i<6;i++)addStain(a.x+rnd(-90,90),a.y+rnd(-50,50),'B',1.2,30);G.shake=14;sfx('boom');break}
@@ -631,7 +642,7 @@ function updateExtras(dt){
   for(const a of allies){if(a.rec||!a.secret||a.secret==='corner')continue;const prog=secretProg(a);if(prog>=a.need&&G.state==='play'){a.x=P.x+40;a.y=P.y+10;G.flags['unlock_'+a.id]=1;banner('SECRET FRIEND UNLOCKED!',a.name+' wants to join you',3);recruit(a);break}}
 }
 function secretProg(a){return a.secret==='kills'?G.kills:a.secret==='robots'?(G.flags.kr||0):a.secret==='aliens'?(G.flags.ka||0):0}
-function shout(){G.shoutT=1.8;let ok=false;if(!muted){try{if(window.AndroidApp&&AndroidApp.speak)ok=AndroidApp.speak('Kitchen gun!')}catch(e){}if(!ok){try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('Kitchen gun!');u.rate=1.15;u.pitch=.7;u.volume=1;speechSynthesis.cancel();speechSynthesis.speak(u);ok=true}}catch(e){}}}sfx('shout')}
+function shout(){G.shoutT=1.8;let ok=vo('nib_kg');if(!muted&&!ok){try{if(window.AndroidApp&&AndroidApp.speak)ok=AndroidApp.speak('Kitchen gun!')}catch(e){}if(!ok){try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance('Kitchen gun!');u.rate=1.15;u.pitch=.7;u.volume=1;speechSynthesis.cancel();speechSynthesis.speak(u);ok=true}}catch(e){}}}sfx('shout')}
 function kitchenGun(){if(G.power<100||G.kgT>0||P.dead||G.state!=='play')return;G.power=0;G.kgT=1.7;G.kgFired=false;P.inv=Math.max(P.inv,2.5);shout();sfx('kgcharge')}
 function updateKG(dt){G.kgT-=dt;if(!G.kgFired&&G.kgT<=1.0){G.kgFired=true;G.flash=1;G.shake=26;sfx('boom');sfx('clang');
     const v=visibleEnemies();for(const z of v){killZ(z);for(let i=0;i<3;i++){const an=Math.random()*6.283,sp=rnd(200,500);parts.push({x:z.x,y:z.y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp*.7,life:1.1,max:1.1,kind:'utensil',u:Math.floor(Math.random()*4),rot:Math.random()*6,size:1,col:INK,h:20+rnd(0,30)})}}
@@ -685,7 +696,7 @@ function updateParts(dt){for(const p of parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy
   for(const s of stains)s.life-=dt;stains=stains.filter(s=>s.life>0)}
 
 /* ================= BOSS ================= */
-function spawnBoss(){const hp=4200+G.level*260;boss={x:BLOT.x,y:BLOT.y,hp,max:hp,r:72,t:0,cd:2.5,step:0,state:'rise',st:0,hit:0,tx:0,ty:0,dead:false,deadT:0,rise:0};G.bossFight=true;sfx('roar');G.shake=12;banner('THE BLOT','Every mistake, all at once.',3)}
+function spawnBoss(){const hp=4200+G.level*260;boss={x:BLOT.x,y:BLOT.y,hp,max:hp,r:72,t:0,cd:2.5,step:0,state:'rise',st:0,hit:0,tx:0,ty:0,dead:false,deadT:0,rise:0};G.bossFight=true;sfx('roar');setTimeout(()=>vo('nib_boss'),900);G.shake=12;banner('THE BLOT','Every mistake, all at once.',3)}
 function hurtBoss(d){if(!boss||boss.dead||boss.state==='rise')return;let crit=Math.random()<critC();if(crit)d*=2;boss.hp-=d;boss.hit=.08;floater(boss.x+rnd(-40,40),boss.y-120,Math.round(d)+(crit?'!':''),crit?RED:BLK,crit?26:19);sfx('hit');
   if(boss.hp<=0){boss.hp=0;boss.dead=true;boss.deadT=0;G.flags.boss=true;G.bossFight=false;sfx('roar');G.shake=18;for(let i=0;i<14;i++)addStain(boss.x+rnd(-120,120),boss.y+rnd(-60,60),'K',2,120);inkBurst(boss.x,boss.y,80,BLK,500,60);zombies.forEach(z=>{z.dead=true;addStain(z.x,z.y,'K',1,30)});addXP(400)}}
 function updateBoss(dt){if(!boss)return;const b=boss;b.hit=Math.max(0,b.hit-dt);b.t+=dt;
@@ -721,9 +732,9 @@ function drawBoss(g,b){seed(77+G.boil*5);const rise=b.rise!=null?b.rise:1,x=b.x,
 function updateWorld(dt){
   const reg=regionAt(P.x,P.y);if(reg.id!==G.region){G.region=reg.id;G.regBanner={name:reg.name,t:3.2};const a=allies.find(a=>a.reg===reg.id&&!a.rec&&!a.secret);if(a&&!G.heard[a.id]){G.heard[a.id]=1;setTimeout(()=>toast(a.call?`Somewhere in ${reg.name}, someone whispers "${a.call}"`:`Somewhere in ${reg.name}, someone is crying "help!"...`,3.5),1600)}}
   explore();
-  for(const c of camps){if(dist(P.x,P.y,c.x,c.y)<70){if(!c.lit){c.lit=true;sfx('fire');banner('Campfire lit','Progress saved • respawn point set',2.6)}if(G.campfire!==c.i){G.campfire=c.i;save()}if(P.hp<P.maxHp)P.hp=Math.min(P.maxHp,P.hp+dt*12);for(const a of allies)if(a.rec&&!a.down)a.hp=Math.min(a.max,a.hp+dt*15)}}
+  for(const c of camps){if(dist(P.x,P.y,c.x,c.y)<70){if(!c.lit){c.lit=true;sfx('fire');vo('nib_camp');banner('Campfire lit','Progress saved • respawn point set',2.6)}if(G.campfire!==c.i){G.campfire=c.i;save()}if(P.hp<P.maxHp)P.hp=Math.min(P.maxHp,P.hp+dt*12);for(const a of allies)if(a.rec&&!a.down)a.hp=Math.min(a.max,a.hp+dt*15)}}
   for(const c of crates){if(c.broken){c.rt-=dt;if(c.rt<=0&&dist(P.x,P.y,c.x,c.y)>900)c.broken=false;continue}if(dist(P.x,P.y,c.x,c.y)<28){c.broken=true;c.rt=150;sfx('die');inkBurst(c.x,c.y,10,INK,160);drops.push({x:c.x+8,y:c.y+4,k:'ammo',t:0});if(Math.random()<.45)drops.push({x:c.x-8,y:c.y+6,k:'heart',t:0});for(let i=0;i<4;i++)orbs.push({x:c.x,y:c.y,v:3,vx:rnd(-90,90),vy:rnd(-70,70),t:0})}}
-  for(const w of wcrates){if(w.taken)continue;if(dist(P.x,P.y,w.x,w.y)<42){w.taken=true;const ws=P.W[w.wpn];ws.own=true;ws.mag=magSize(w.wpn);ws.res=Math.max(ws.res,WPN[w.wpn].res0);selectWeapon(w.wpn);sfx('recruit');banner('NEW GUN: '+WPN[w.wpn].name,`Press ${WORDER.indexOf(w.wpn)+1} / swap to equip`,3.4);save()}}
+  for(const w of wcrates){if(w.taken)continue;if(dist(P.x,P.y,w.x,w.y)<42){w.taken=true;vo('nib_newgun');const ws=P.W[w.wpn];ws.own=true;ws.mag=magSize(w.wpn);ws.res=Math.max(ws.res,WPN[w.wpn].res0);selectWeapon(w.wpn);sfx('recruit');banner('NEW GUN: '+WPN[w.wpn].name,`Press ${WORDER.indexOf(w.wpn)+1} / swap to equip`,3.4);save()}}
   if(!G.flags.boss&&!boss&&recCount()>=3&&dist(P.x,P.y,BLOT.x,BLOT.y)<620){if(!G.flags.bossSeen){G.flags.bossSeen=true;playCut(bossPanels(),()=>spawnBoss())}else spawnBoss()}
   if(recCount()>=3&&!G.flags.wallBroke){G.flags.wallBroke=true;banner('The ink wall cracks!','THE BLOT (north) is open. Bring your friends.',4)}
   // spawns
@@ -746,10 +757,10 @@ function respawn(){const c=camps[G.campfire];P.x=c.x;P.y=c.y+40;P.dead=false;P.h
   for(const a of allies)if(a.rec){a.down=false;a.hp=a.max;a.x=P.x+rnd(-50,50);a.y=P.y+rnd(10,50)}for(const k of WORDER)if(P.W[k].own)P.W[k].mag=magSize(k);G.state='play';G.camX=P.x;G.camY=P.y;toast('You were redrawn at the campfire.');G.spawnT=3}
 
 /* ================= CUTSCENES ================= */
-function playCut(panels,onEnd){CUT={p:panels,i:0,t:0,onEnd,total:200,typed:0};G.state='cut';if(P)P.firing=false;mouse.down=false;sfx('scratch')}
+function playCut(panels,onEnd){CUT={p:panels,i:0,t:0,onEnd,total:200,typed:0};G.state='cut';if(P)P.firing=false;mouse.down=false;sfx('scratch');storyVO()}
 function cutDone(){const pn=CUT.p[CUT.i];return CUT.t>=2.3&&CUT.typed>=pn.text.length}
-function cutAdvance(){if(!CUT)return;if(!cutDone()){CUT.t=99;CUT.typed=1e9;return}CUT.i++;CUT.t=0;CUT.typed=0;sfx('scratch');if(CUT.i>=CUT.p.length)cutEnd()}
-function cutEnd(){if(!CUT)return;const f=CUT.onEnd;CUT=null;G.state='play';if(f)f()}
+function cutAdvance(){if(!CUT)return;if(!cutDone()){CUT.t=99;CUT.typed=1e9;return}CUT.i++;CUT.t=0;CUT.typed=0;sfx('scratch');if(CUT.i>=CUT.p.length)cutEnd();else storyVO()}
+function cutEnd(){if(!CUT)return;stopChan('story');stopSpeak();const f=CUT.onEnd;CUT=null;G.state='play';if(f)f()}
 function ruled(g){for(let y=40;y<360;y+=40)L(g,0,y,640,y,.8,ink(.18),.5);L(g,58,0,58,360,1,red(.35),.5)}
 function deco(g,t,x,y,s,v=0){g.save();g.translate(x,y);g.scale(s,s);const d=DEC[t];g.translate(-d.ax,-d.ay);d.fn(g,d.w,d.h,mul(hashStr(t+'v')+v*77));g.restore()}
 function ilHand(g,x,y,s=1){g.save();g.translate(x,y);g.scale(s,s);
@@ -810,11 +821,11 @@ function endingPanels(){return[
  {text:'He smiled, found a brand-new pen... and kept drawing.',draw(g){ruled(g);sunDoodle(g,520,80,26);ilHand(g,540,108,.9);const ids=['doodle','smudge','scrawl','tally','margin'];drawStick(g,320,330,{s:2.8,pose:'cheer'});ids.forEach((id,i)=>{const x=i<2?140+i*80:i<4?420+(i-2)*80:580;drawStick(g,x,330+(i%2)*4,{s:2.4,acc:AD[id].acc,pose:'cheer'})})}},
  {text:'THE END ...of this page.',draw(g,t){txt(g,'THE END',320,150,96,INK,'center',true,clamp(t*.8,0,1));txt(g,'...of this page.',320,230,38,RED,'center',false,clamp(t*.8-.5,0,1));drawStick(g,500,110,{s:1.4,pose:'wave'})}},
 ]}
-function recruit(a){playCut(recruitPanels(a),()=>{a.rec=true;a.hp=a.max;a.down=false;a.x=P.x+30;a.y=P.y+20;banner(`${a.name} joined the team!`,a.role,3.2);sfx('recruit');save()})}
+function recruit(a){playCut(recruitPanels(a),()=>{a.rec=true;a.hp=a.max;a.down=false;a.x=P.x+30;a.y=P.y+20;banner(`${a.name} joined the team!`,a.role,3.2);sfx('recruit');setTimeout(()=>vo('join_'+a.id),400);save()})}
 
 /* ================= OVERLAYS: SHARE + ART STUDIO ================= */
 const $=id=>document.getElementById(id);let ovPrev='title';
-function closeOverlays(){$('share').classList.add('hidden');$('studio').classList.add('hidden');if(G.state==='studio'||G.state==='share')G.state=ovPrev;buildArtSprites()}
+function closeOverlays(){if(recState)recState.stop();$('share').classList.add('hidden');$('studio').classList.add('hidden');$('sound').classList.add('hidden');if(G.state==='studio'||G.state==='share'||G.state==='sound')G.state=ovPrev;buildArtSprites()}
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeOverlays));
 function openShare(from){ovPrev=from;G.state='share';$('qrurl').textContent=SHARE_URL;$('share').classList.remove('hidden')}
 if(window.AndroidApp){$('copyBtn').textContent='Share link';$('share').querySelector('.tip').innerHTML='Send the link with any app, or let a friend scan the QR code.'}
@@ -868,8 +879,103 @@ function renderArmory(){const L0=$('armList');L0.innerHTML='';if(!ART.weapons.le
 addEventListener('resize',()=>{if(G&&G.state==='studio'&&ST.tab!=='armory')sizeCanvas()});
 
 window.androidBack=function(){if(!G)return;const st=G.state;
-  if(st==='studio'||st==='share'){closeOverlays();return}if(st==='cut'){cutEnd();return}if(st==='map'){G.state='play';return}if(st==='play'){G.state='pause';return}if(st==='pause'){G.howto=false;G.state='play';return}if(st==='roster'){G.state='pause';return}
+  if(st==='studio'||st==='share'||st==='sound'){closeOverlays();return}if(st==='cut'){cutEnd();return}if(st==='map'){G.state='play';return}if(st==='play'){G.state='pause';return}if(st==='pause'){G.howto=false;G.state='play';return}if(st==='roster'){G.state='pause';return}
   if(st==='title'){if(G.howto){G.howto=false;return}if(G.exitArm>G.time){try{AndroidApp.exit()}catch(e){}return}G.exitArm=G.time+2;return}};
+
+/* ================= SOUND STUDIO: VOICE-OVERS & CUSTOM SOUNDS ================= */
+const VO_KEY='kitchengun_vo_v1';let VOCFG={cues:{},narrator:true,vol:1,quip:.25};try{Object.assign(VOCFG,JSON.parse(localStorage.getItem(VO_KEY)||'{}'))}catch(e){}
+function saveVOCfg(){try{localStorage.setItem(VO_KEY,JSON.stringify(VOCFG))}catch(e){}}
+const VOBUF={},VO_PLAYING={};let voDB=null;
+function idb(){return new Promise((res,rej)=>{if(voDB)return res(voDB);try{const r=indexedDB.open('kitchengun_sound',1);r.onupgradeneeded=()=>r.result.createObjectStore('clips');r.onsuccess=()=>{voDB=r.result;res(voDB)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+async function clipPut(id,blob){const db=await idb();return new Promise((res,rej)=>{const t=db.transaction('clips','readwrite');t.objectStore('clips').put(blob,id);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+async function clipGet(id){const db=await idb();return new Promise((res,rej)=>{const q=db.transaction('clips','readonly').objectStore('clips').get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}
+async function clipDel(id){try{const db=await idb();await new Promise(res=>{const t=db.transaction('clips','readwrite');t.objectStore('clips').delete(id);t.oncomplete=res;t.onerror=res})}catch(e){}}
+async function voBuffer(id){if(VOBUF[id])return VOBUF[id];if(!AC)return null;const b=await clipGet(id);if(!b)return null;const ab=await b.arrayBuffer();const buf=await new Promise((res,rej)=>AC.decodeAudioData(ab,res,rej));VOBUF[id]=buf;return buf}
+function preloadVO(){if(!AC)return;for(const id in VOCFG.cues)if(VOCFG.cues[id].type==='clip')voBuffer(id).catch(()=>{})}
+function stopChan(ch){const s2=VO_PLAYING[ch];if(s2){try{s2.stop()}catch(e){}VO_PLAYING[ch]=null}}
+function playBuf(buf,fx,vol,chan){if(!AC)return null;try{if(AC.state==='suspended')AC.resume()}catch(e){}
+  const src=AC.createBufferSource();src.buffer=buf;const out=AC.createGain();out.gain.value=(vol==null?1:vol)*VOCFG.vol*1.3;let node=src;const T=AC.currentTime,dur=buf.duration;
+  const echo=(dt,fb)=>{const d=AC.createDelay(1);d.delayTime.value=dt;const g=AC.createGain();g.gain.value=fb;d.connect(g);g.connect(d);d.connect(out);node.connect(d)};
+  switch(fx){
+   case'chip':src.playbackRate.value=1.55;break;
+   case'deep':src.playbackRate.value=.75;break;
+   case'monster':{src.playbackRate.value=.62;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=900;node.connect(f);node=f;break}
+   case'robot':{const m=AC.createGain();m.gain.value=0;const o=AC.createOscillator();o.type='square';o.frequency.value=60;o.connect(m.gain);o.start(T);o.stop(T+dur*2+.3);node.connect(m);node=m;break}
+   case'radio':{const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=1600;f.Q.value=1.2;const ws=AC.createWaveShaper(),c=new Float32Array(256);for(let i=0;i<256;i++)c[i]=Math.tanh((i/128-1)*4);ws.curve=c;node.connect(f);f.connect(ws);node=ws;break}
+   case'echo':echo(.24,.42);break;
+   case'ghost':src.playbackRate.value=.85;echo(.33,.5);break;
+  }
+  node.connect(out);out.connect(AC.destination);if(chan)stopChan(chan);src.start();if(chan)VO_PLAYING[chan]=src;return src}
+const TTSP={normal:[1,1],high:[1.6,1.05],low:[.6,.95],deep:[.3,.85],fast:[1.1,1.45],slow:[.9,.7]};
+const WHO_STYLE={'THE BLOT':'deep',Nib:'normal',Doodle:'high',Smudge:'low',Scrawl:'normal',Tally:'fast',Margin:'high',Shade:'low',Sizzle:'fast','Unit Zero':'deep',Erasmus:'slow',Skree:'high'};
+function speakText(text,style){if(muted||!text)return false;const pr=TTSP[style]||TTSP.normal;
+  try{if(window.AndroidApp&&AndroidApp.speakEx)return AndroidApp.speakEx(text,pr[0],pr[1])}catch(e){}
+  try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(text);u.pitch=Math.min(2,pr[0]);u.rate=pr[1];u.volume=Math.min(1,VOCFG.vol);speechSynthesis.cancel();speechSynthesis.speak(u);return true}}catch(e){}return false}
+function stopSpeak(){try{if(window.AndroidApp&&AndroidApp.stopSpeak)AndroidApp.stopSpeak()}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+function vo(id,chan){const c=VOCFG.cues[id];if(!c||muted)return false;
+  if(c.type==='tts'){speakText(c.text,c.style);if(G&&G.state==='play'&&!id.startsWith('sfx_'))G.say={text:c.text,t:2.4};return true}
+  const buf=VOBUF[id];if(buf)playBuf(buf,c.fx,c.vol,chan||id);else voBuffer(id).then(b=>{if(b)playBuf(b,c.fx,c.vol,chan||id)}).catch(()=>{});return true}
+function voT(id,cool){if(!G.voLast)G.voLast={};if(G.time-(G.voLast[id]||-99)<cool)return false;G.voLast[id]=G.time;return vo(id)}
+function storyVO(){stopChan('story');stopSpeak();if(!CUT)return;const pn=CUT.p[CUT.i];if(!pn||!pn.vo)return;if(vo('story_'+pn.vo,'story'))return;if(VOCFG.narrator)speakText(pn.text,WHO_STYLE[pn.who]||'normal')}
+function tagVO(pre,arr){arr.forEach((p,i)=>{p.vo=pre+'_'+(i+1)});return arr}
+{const a=introPanels,b=bossPanels,c=endingPanels,d=recruitPanels;introPanels=()=>tagVO('intro',a());bossPanels=()=>tagVO('boss',b());endingPanels=()=>tagVO('end',c());recruitPanels=x=>tagVO('rec_'+x.id,d(x))}
+
+/* ---- Sound Studio UI ---- */
+const S_TABS=[['nib','Nib'],['friends','Friends'],['story','Story'],['enemy','Enemies'],['sfx','Weapons & SFX'],['set','Settings']];
+const SFX_ENEMY=[['tear','Zombie tears out of the paper'],['groan','Zombie groan'],['beep','Robot appears'],['laser','Robot laser'],['crack','Alien egg hatches'],['hiss','Alien pounce'],['spit','Acid / ink spit'],['woo','Ghost appears / vanishes'],['die','Enemy erased'],['clank','Robot destroyed'],['roar','THE BLOT roars']];
+const SFX_WPN=[['pistol','Pistol shot'],['shotgun','Shotgun blast'],['smg','SMG shot'],['rifle','Rifle shot'],['launcher','Launcher / bomb throw'],['boom','Explosion'],['swing','Melee swing'],['clang','Frying pan BONK'],['reload','Reload'],['empty','Out of ammo click'],['pick','Pick-up'],['xp','Ink drop (XP)'],['level','Level-up jingle'],['hurt','Nib hurt sound'],['superup','Friend super starts'],['recruit','Friend joins jingle'],['fire','Campfire / soup'],['laserP','Drone / Unit Zero laser']];
+let sTab='nib',recState=null,sPending=null,sEdit=null;
+function cueList(tab){const L0=[];
+  if(tab==='nib')L0.push(['nib_kg','"KITCHEN GUN!" shout','default: computer voice',5],['nib_level','Level up','',4],['nib_hurt','Gets hurt','',3],['nib_dead','Gets crumpled (dies)','',5],['nib_kill','Kill quip','plays sometimes after a kill',4],['nib_dash','Dash','',3],['nib_newgun','Finds a new gun','',5],['nib_camp','Lights a campfire','',5],['nib_boss','Boss fight starts','',6]);
+  else if(tab==='friends')allies.forEach(a=>{L0.push(['sup_'+a.id,a.name+' — super','"'+a.sup.name+'!"',5],['join_'+a.id,a.name+' — joins the team','',6])});
+  else if(tab==='story'){const add=(pre,arr,lab)=>arr.forEach((p,i)=>L0.push(['story_'+pre+'_'+(i+1),lab+' '+(i+1)+(p.who?' — '+p.who:''),p.text.length>90?p.text.slice(0,88)+'…':p.text,30]));
+    add('intro',introPanels(),'Intro');allies.forEach(a=>add('rec_'+a.id,recruitPanels(a),a.name+' scene'));add('boss',bossPanels(),'Boss');add('end',endingPanels(),'Ending')}
+  else if(tab==='enemy')SFX_ENEMY.forEach(([k,l])=>L0.push(['sfx_'+k,l,'',4]));
+  else if(tab==='sfx')SFX_WPN.forEach(([k,l])=>L0.push(['sfx_'+k,l,'',4]));
+  return L0.map(([id,label,sub,max])=>({id,label,sub,max}))}
+const S_HINT={nib:'Record your own lines for Nib. Tip: keep them short and LOUD!',friends:'Give every friend a voice for their super and when they join.',story:'Voice-over for every cutscene panel. With no recording, the narrator reads the text aloud (turn off in Settings).',enemy:'Replace enemy sounds with your own noises.',sfx:'Replace gun and game sounds — make your own pew-pews!',set:''};
+function openSound(from){ovPrev=from;G.state='sound';initAudio();$('sound').classList.remove('hidden');sMsg('');sTabGo(sTab)}
+function sMsg(t){$('sMsg').textContent=t}
+function sTabGo(t){sTab=t;sEdit=null;const tb=$('sTabs');tb.innerHTML='';S_TABS.forEach(([k,l])=>{const b=document.createElement('button');b.textContent=l;if(k===t)b.className='on';b.addEventListener('click',()=>sTabGo(k));tb.appendChild(b)});$('sHint').textContent=S_HINT[t]||'';sRender()}
+function sRender(){const box=$('sList');box.innerHTML='';if(sTab==='set'){sSettings(box);return}for(const c of cueList(sTab))box.appendChild(sRow(c))}
+function sBtn(parent,t,fn,cls){const b=document.createElement('button');b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);parent.appendChild(b);return b}
+function sRow(c){const d=document.createElement('div');d.className='srow';const cfg=VOCFG.cues[c.id];
+  const lb=document.createElement('span');lb.className='lb';lb.textContent=c.label;if(c.sub){const sm=document.createElement('small');sm.textContent=c.sub;lb.appendChild(sm)}d.appendChild(lb);
+  const ch=document.createElement('span');ch.className='chip'+(cfg?'':' def');ch.textContent=cfg?(cfg.type==='tts'?'voice text':(cfg.src==='rec'?'recorded':'uploaded')):'built-in';d.appendChild(ch);
+  sBtn(d,'▶',()=>sPreview(c));
+  const rb=sBtn(d,recState&&recState.id===c.id?'■ stop':'● rec',()=>sRec(c,rb),recState&&recState.id===c.id?'recon':'');
+  sBtn(d,'⬆ file',()=>{sPending=c;$('sFile').value='';$('sFile').click()});
+  sBtn(d,'Aa type',()=>{sEdit=sEdit===c.id?null:c.id;sRender()});
+  if(cfg&&cfg.type==='clip'){const sel=document.createElement('select');[['none','no effect'],['chip','chipmunk'],['deep','deep'],['monster','monster'],['robot','robot'],['radio','radio'],['echo','echo'],['ghost','ghost']].forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;sel.appendChild(o)});sel.value=cfg.fx||'none';sel.addEventListener('change',()=>{cfg.fx=sel.value;saveVOCfg();vo(c.id)});d.appendChild(sel)}
+  if(cfg)sBtn(d,'✕',async()=>{delete VOCFG.cues[c.id];delete VOBUF[c.id];saveVOCfg();await clipDel(c.id);sMsg('Back to built-in sound.');sRender()});
+  if(sEdit===c.id){const ed=document.createElement('div');ed.className='ttsed';const inp=document.createElement('input');inp.maxLength=c.max>=30?400:80;inp.placeholder='Type what the voice should say…';inp.value=cfg&&cfg.type==='tts'?cfg.text:'';
+    const sel=document.createElement('select');Object.keys(TTSP).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k+' voice';sel.appendChild(o)});sel.value=cfg&&cfg.style||'normal';ed.appendChild(inp);ed.appendChild(sel);
+    sBtn(ed,'test',()=>speakText(inp.value,sel.value));sBtn(ed,'save',async()=>{if(!inp.value.trim()){sMsg('Type something first.');return}await clipDel(c.id);delete VOBUF[c.id];VOCFG.cues[c.id]={type:'tts',text:inp.value.trim(),style:sel.value};saveVOCfg();sEdit=null;sMsg('Saved ✓');sRender()},'big');d.appendChild(ed);setTimeout(()=>inp.focus(),30)}
+  return d}
+function sPreview(c){initAudio();if(VOCFG.cues[c.id]){vo(c.id);return}
+  if(c.id.startsWith('sfx_')){sfx(c.id.slice(4));return}
+  if(c.id.startsWith('story_')){speakText(c.sub.replace(/…$/,''),'normal');return}
+  if(c.id==='nib_kg'){speakText('Kitchen gun!','low');return}
+  if(c.id.startsWith('sup_')){const a=allies.find(a=>'sup_'+a.id===c.id);speakText(a.sup.name+'!',WHO_STYLE[a.name]);return}
+  sMsg('No sound here yet — record one, upload a file or type a line.')}
+async function sRec(c,btn){if(recState){recState.stop();return}initAudio();
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){sMsg('Recording is not supported here — use ⬆ file instead.');return}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){sMsg(window.AndroidApp?'Microphone permission was denied — allow it for Kitchen Gun in your phone settings.':'The microphone is blocked on this web page. Record in the Android app, or use ⬆ file (e.g. a clip from your voice recorder).');return}
+  let mr;try{mr=new MediaRecorder(stream)}catch(e){stream.getTracks().forEach(t=>t.stop());sMsg('Recording is not supported here — use ⬆ file instead.');return}
+  const chunks=[];mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};let left=c.max||5;btn.classList.add('recon');btn.textContent='■ stop '+left+'s';
+  const iv=setInterval(()=>{left--;btn.textContent='■ stop '+left+'s';if(left<=0&&mr.state!=='inactive')mr.stop()},1000);
+  mr.onstop=async()=>{clearInterval(iv);stream.getTracks().forEach(t=>t.stop());recState=null;const blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'});if(!blob.size){sMsg('Nothing was recorded.');sRender();return}await saveClip(c.id,blob,'rec')};
+  recState={id:c.id,stop:()=>{if(mr.state!=='inactive')mr.stop()}};mr.start();sMsg('Recording… speak now! (tap stop when done)')}
+async function saveClip(id,blob,src){if(blob.size>5e6){sMsg('That file is too big (max 5 MB) — use a shorter clip.');return}
+  try{await clipPut(id,blob)}catch(e){sMsg('Could not save on this device.');return}delete VOBUF[id];const old=VOCFG.cues[id];VOCFG.cues[id]={type:'clip',src,fx:old&&old.fx||'none',vol:1};saveVOCfg();
+  let ok=true;try{await voBuffer(id)}catch(e){ok=false}sRender();if(ok){vo(id);sMsg('Saved ✓ — it will play in the game.')}else sMsg('Saved, but this audio format could not be played here. Try an .mp3 or .m4a file.')}
+$('sFile').addEventListener('change',()=>{const f=$('sFile').files[0];if(f&&sPending)saveClip(sPending.id,f,'file')});
+function sSettings(box){const row=(html)=>{const d=document.createElement('div');d.className='setrow';d.innerHTML=html;box.appendChild(d);return d};
+  const r1=row('<label class="chk"><input type="checkbox" id="sNar"> Narrator reads story cutscenes aloud</label>');r1.querySelector('input').checked=!!VOCFG.narrator;r1.querySelector('input').addEventListener('change',e=>{VOCFG.narrator=e.target.checked;saveVOCfg()});
+  const r2=row('<span>Voice-over volume</span><input type="range" min="0" max="2" step="0.1"><span class="vv"></span>');const rg=r2.querySelector('input');rg.value=VOCFG.vol;r2.querySelector('.vv').textContent=Math.round(VOCFG.vol*100)+'%';rg.addEventListener('input',()=>{VOCFG.vol=+rg.value;r2.querySelector('.vv').textContent=Math.round(VOCFG.vol*100)+'%';saveVOCfg()});
+  const r3=row('<span>Kill quips</span><select><option value="0">never</option><option value="0.1">sometimes</option><option value="0.25">often</option><option value="0.6">a lot</option></select>');const q=r3.querySelector('select');q.value=String(VOCFG.quip);if(q.selectedIndex<0)q.value='0.25';q.addEventListener('change',()=>{VOCFG.quip=+q.value;saveVOCfg()});
+  const n=Object.keys(VOCFG.cues).length;const r4=row(`<span>${n} custom sound${n===1?'':'s'} saved on this device</span>`);const cb=sBtn(r4,'Clear all',async()=>{if(!cb.dataset.sure){cb.dataset.sure=1;cb.textContent='Sure? tap again';return}for(const id of Object.keys(VOCFG.cues)){await clipDel(id);delete VOBUF[id]}VOCFG.cues={};saveVOCfg();sMsg('All custom sounds removed.');sRender()});
+  row('<span style="font-size:16px">Tips: ● rec uses your microphone (works in the Android app). ⬆ file loads any audio file. Aa type makes the computer voice say your line. Effects: chipmunk, deep, monster, robot, radio, echo, ghost.</span>')}
 
 /* ================= INPUT ================= */
 function s2w(sx,sy){return{x:(sx-W/2)/ZOOM+G.camX,y:(sy-H/2)/ZOOM+G.camY}}
@@ -889,7 +995,7 @@ function onKey(c){
   const d={Digit1:0,Digit2:1,Digit3:2,Digit4:3,Digit5:4,Digit6:5,Digit7:6,Digit8:7,Digit9:8}[c];if(d!=null)selectWeapon(slotList()[d]);if(c==='KeyF')toggleAuto();if(c==='KeyG')kitchenGun();
   if(c==='KeyQ')cycleWeapon(1);if(c==='KeyR')startReload();if(c==='KeyE')interact();if(c==='KeyM'||c==='Tab')G.state='map';if(c==='Escape'||c==='KeyP')G.state='pause';if(c==='Space'||c==='ShiftLeft'||c==='ShiftRight')dash();
 }
-addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='SELECT'||tg==='TEXTAREA')return;if(G&&(G.state==='studio'||G.state==='share')){if(e.code==='Escape')closeOverlays();return}if(e.repeat&&!['KeyW','KeyA','KeyS','KeyD'].includes(e.code))return;keys[e.code]=true;initAudio();onKey(e.code);if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].includes(e.code))e.preventDefault()});
+addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='SELECT'||tg==='TEXTAREA')return;if(G&&(G.state==='studio'||G.state==='share'||G.state==='sound')){if(e.code==='Escape')closeOverlays();return}if(e.repeat&&!['KeyW','KeyA','KeyS','KeyD'].includes(e.code))return;keys[e.code]=true;initAudio();onKey(e.code);if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].includes(e.code))e.preventDefault()});
 addEventListener('keyup',e=>{keys[e.code]=false});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;mouse.down=false;if(G&&G.state==='play')G.state='pause'});
 cv.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
@@ -905,7 +1011,7 @@ function endTouch(e){for(const t of e.changedTouches){if(stickL.on&&stickL.id===
 cv.addEventListener('touchend',endTouch);cv.addEventListener('touchcancel',endTouch);
 
 /* ================= LEVEL UP ================= */
-function openLevelUp(){const avail=SKILLS.filter(s=>sk(s.id)<s.max);for(let i=avail.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[avail[i],avail[j]]=[avail[j],avail[i]]}G.cards=avail.slice(0,3);if(!G.cards.length){G.pendingLv=0;return}G.state='levelup';G.luT=0;P.firing=false;mouse.down=false;stickR={on:false};stickL={on:false};sfx('level')}
+function openLevelUp(){const avail=SKILLS.filter(s=>sk(s.id)<s.max);for(let i=avail.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[avail[i],avail[j]]=[avail[j],avail[i]]}G.cards=avail.slice(0,3);vo('nib_level');if(!G.cards.length){G.pendingLv=0;return}G.state='levelup';G.luT=0;P.firing=false;mouse.down=false;stickR={on:false};stickL={on:false};sfx('level')}
 function pickSkill(i){const s=G.cards[i];G.skills[s.id]=sk(s.id)+1;P.maxHp=maxHpV();if(s.id==='hp')P.hp=P.maxHp;else P.hp=Math.min(P.maxHp,P.hp+P.maxHp*.2);if(s.id==='mag')for(const k of WORDER)P.W[k].mag=Math.min(P.W[k].mag,magSize(k));
   G.pendingLv--;sfx('pick');floater(P.x,P.y-50,s.name+' '+toRoman(sk(s.id)),INK,22);if(G.pendingLv>0)openLevelUp();else{G.state='play';save()}}
 const toRoman=n=>['','I','II','III','IV','V','VI','VII','VIII','IX','X'][n]||n;
@@ -991,6 +1097,7 @@ function renderWorld(){
     else if(p.kind==='plus'){txt(ctx,'+',p.x,p.y-p.h,16,RED,'center',true)}
     else if(p.kind==='scrib'){seed(p.x|0);scribbleOver(ctx,p.x,p.y-p.h,8,6,blk(.7),5)}
     else{ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y-p.h,p.size,0,7);ctx.fill()}}ctx.globalAlpha=1;
+  if(G.say&&G.say.t>0&&!P.dead){G.say.t-=1/60;const t2=G.say.text.length>40?G.say.text.slice(0,38)+'…':G.say.text;ctx.font='700 17px Caveat, cursive';const w2=ctx.measureText(t2).width+18,bx=P.x-w2/2,by=P.y-96;seed(G.boil+21);penBox(ctx,bx,by,w2,24,1.4,INK,'rgba(255,250,235,0.93)');PL(ctx,[[P.x-4,by+24],[P.x,by+34],[P.x+5,by+24]],1.4,INK,.3);txt(ctx,t2,P.x,by+12,17,INK,'center',true)}
   for(const f of floaters){txt(ctx,f.text,f.x,f.y,f.size,f.col,'center',true,clamp(f.t*2,0,1))}
   // talk prompt, help texts, objective arrow
   for(const a of allies){if(a.rec||(a.secret&&a.secret!=='corner'))continue;const d=dist(P.x,P.y,a.x,a.y);if(d<900&&Math.sin(G.time*2.2+a.eid)>.2)txt(ctx,a.call||'help!',a.x+18,a.y-70-Math.sin(G.time*3)*4,22,RED,'center',true);
@@ -1117,7 +1224,7 @@ function drawTitle(){UI=[];drawPaperScreen();const s=uiS();seed(G.boil*3);const 
   seed(4+G.boil);drawRobotBody(ctx,{type:'reaper',face:-1,walk:t*4,id:1},cx+130*s,gy,BLK,k*.85);seed(6+G.boil);drawAlienBody(ctx,{type:'stalker',face:-1,walk:t*5,id:2},cx+225*s,gy,BLK,k*.8);
   seed(8+G.boil);drawRobotBody(ctx,{type:'drone',face:-1,walk:0,id:4},cx+70*s,gy-60*s,BLK,k*.8);
   const has=!!loadSave(),cols=W>760?3:2;
-  const end=btnGrid([has?['▶ Continue',continueGame,RED]:null,[has?'New Story':'▶ New Story',()=>{if(has&&!G.confirmNew){G.confirmNew=1;toastTitle='Tap New Story again to overwrite your save';return}startNew()},has?null:RED],['✎ Art Studio',()=>openStudio('title')],['Auto-shoot: '+(OPT.auto?'ON':'OFF'),toggleAuto],['Share / QR code',()=>openShare('title')],['How to play',()=>{G.howto=!G.howto}]],H*.56,cols);
+  const end=btnGrid([has?['▶ Continue',continueGame,RED]:null,[has?'New Story':'▶ New Story',()=>{if(has&&!G.confirmNew){G.confirmNew=1;toastTitle='Tap New Story again to overwrite your save';return}startNew()},has?null:RED],['✎ Art Studio',()=>openStudio('title')],['♪ Sound Studio',()=>openSound('title')],['Auto-shoot: '+(OPT.auto?'ON':'OFF'),toggleAuto],['Share / QR code',()=>openShare('title')],['How to play',()=>{G.howto=!G.howto}]],H*.56,cols);
   if(toastTitle&&G.confirmNew)txt(ctx,toastTitle,cx,end+6*s,18*s,RED,'center',true);
   txt(ctx,'zombies • robots • aliens • ghosts — draw your own hero & weapons',cx,H-14*s,15*s,ink(.6),'center');
   if(G.exitArm>G.time)txt(ctx,'Press back again to exit',cx,H-40*s,20*s,RED,'center',true);
@@ -1126,7 +1233,7 @@ let toastTitle='';
 function g2Emerge(g,x,y,s,z){const p=z.t/EMERGE,tw=16*s*Math.min(1,p/.25+.2),th=5*s*Math.min(1,p/.25+.15);tearHole(g,x,y,tw,th);if(p>.22){const rise=Math.min(1,(p-.22)/.7);g.save();g.beginPath();g.rect(x-200,y-300,400,300+th*.2);g.clip();g.translate(0,(1-rise)*40*s);drawZombieBody(g,z,x,y,BLK,s);g.restore()}}
 function ruledScreen(){ctx.save();for(let y=60;y<H;y+=48){ctx.strokeStyle='rgba(60,90,170,0.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.strokeStyle=red(.25);ctx.beginPath();ctx.moveTo(60,0);ctx.lineTo(60,H);ctx.stroke();ctx.restore()}
 function drawHowTo(){const s=uiS(),w=Math.min(W*.92,560*s),h=Math.min(H*.9,420*s),x=(W-w)/2,y=(H-h)/2;seed(50+G.boil);penBox(ctx,x,y,w,h,2,INK,'rgba(243,232,200,0.97)');
-  const L1=['HOW TO PLAY','Keyboard: WASD move • mouse aim • hold click shoot/swing','1–9 / Q / wheel switch weapons • R reload • Space dash','F auto-shoot • G KITCHEN GUN! (when the red meter is full) • E talk • M map','Touch: left thumb moves, right thumb aims & fires (or turn on AUTO)','','Zombies, robots, aliens & ghosts crawl out of the paper.','Kill them for ink drops (XP) → level up → pick a skill.','Find 4 guns and 6 lost friends (+4 secret ones). Their SUPER fires when full.','Art Studio: draw your own stickman, melee weapons, guns & drones.','Campfires save the game. 3 friends break the wall around THE BLOT.'];
+  const L1=['HOW TO PLAY','Keyboard: WASD move • mouse aim • hold click shoot/swing','1–9 / Q / wheel switch weapons • R reload • Space dash','F auto-shoot • G KITCHEN GUN! (when the red meter is full) • E talk • M map','Touch: left thumb moves, right thumb aims & fires (or turn on AUTO)','','Zombies, robots, aliens & ghosts crawl out of the paper.','Kill them for ink drops (XP) → level up → pick a skill.','Find 4 guns and 6 lost friends (+4 secret ones). Their SUPER fires when full.','Art Studio: draw your hero & weapons • Sound Studio: record your own voices & sounds.','Campfires save the game. 3 friends break the wall around THE BLOT.'];
   L1.forEach((l,i)=>txt(ctx,l,W/2,y+30*s+i*h/12.2,(i?17:26)*s,i?INK:RED,'center',!i));btn(x,y,w,h,()=>{G.howto=false})}
 function drawLevelUp(){const s=uiS();ctx.fillStyle='rgba(235,220,182,0.82)';ctx.fillRect(0,0,W,H);UI=[];seed(G.boil+8);
   txt(ctx,`LEVEL UP!  LV ${G.level-G.pendingLv+1}`,W/2,H*.14,46*s,RED,'center',true);txt(ctx,'Nib\'s lines grow stronger — choose a skill',W/2,H*.14+38*s,20*s,INK,'center');
@@ -1159,7 +1266,7 @@ function drawPause(){const s=uiS();ctx.fillStyle='rgba(235,220,182,0.88)';ctx.fi
   const learned=SKILLS.filter(k=>sk(k.id));const cols=Math.max(1,Math.floor(W/(170*s)));learned.forEach((k,i)=>{const cx=W/2-(Math.min(cols,learned.length)*170*s)/2+(i%cols)*170*s+85*s,cy=H*.3+Math.floor(i/cols)*34*s;skillIcon(ctx,k.id,cx-60*s,cy,.75*s);txt(ctx,`${k.name} ${toRoman(sk(k.id))}`,cx-44*s,cy,17*s,INK,'left',true)});
   if(!learned.length)txt(ctx,'No skills yet — fill the XP bar to level up.',W/2,H*.3,18*s,ink(.6),'center');
   const rows=Math.ceil(learned.length/cols);const y0=Math.max(H*.42,H*.3+rows*34*s+8*s);
-  btnGrid([['▶ Resume',()=>{G.state='play'},RED],['Auto-shoot: '+(OPT.auto?'ON':'OFF'),toggleAuto],['✎ Art Studio',()=>openStudio('pause')],['Share / QR code',()=>openShare('pause')],['Friends roster',()=>{G.state='roster'}],[muted?'Sound: OFF':'Sound: ON',()=>{muted=!muted;OPT.muted=muted;saveOpt()}],['How to play',()=>{G.howto=!G.howto}],[G.confirmRestart?'Tap again: erase & restart':'Restart story',()=>{if(!G.confirmRestart){G.confirmRestart=1;return}try{localStorage.removeItem(SAVE_KEY)}catch(e){}startNew()}],['Save & quit to title',()=>{save();G.state='title';G.confirmNew=0}]],y0,W>760?4:2);
+  btnGrid([['▶ Resume',()=>{G.state='play'},RED],['Auto-shoot: '+(OPT.auto?'ON':'OFF'),toggleAuto],['✎ Art Studio',()=>openStudio('pause')],['♪ Sound Studio',()=>openSound('pause')],['Share / QR code',()=>openShare('pause')],['Friends roster',()=>{G.state='roster'}],[muted?'Sound: OFF':'Sound: ON',()=>{muted=!muted;OPT.muted=muted;saveOpt()}],['How to play',()=>{G.howto=!G.howto}],[G.confirmRestart?'Tap again: erase & restart':'Restart story',()=>{if(!G.confirmRestart){G.confirmRestart=1;return}try{localStorage.removeItem(SAVE_KEY)}catch(e){}startNew()}],['Save & quit to title',()=>{save();G.state='title';G.confirmNew=0}]],y0,W>760?4:2);
   if(G.howto)drawHowTo()}
 
 /* ================= MAIN LOOP ================= */
@@ -1178,8 +1285,9 @@ function tick(dt){G.time+=dt;G.boil=Math.floor(G.time*7);
   if(G.pendingLv>0&&G.state==='play')openLevelUp();
 }
 function render(){ctx.setTransform(DPR,0,0,DPR,0,0);
-  if(G.state==='title'||((G.state==='studio'||G.state==='share')&&ovPrev==='title')){drawTitle();ctx.drawImage(vignette,0,0,W,H);return}
-  if(G.state==='studio'||G.state==='share'){renderWorld();ctx.drawImage(vignette,0,0,W,H);return}
+  const ovS=G.state==='studio'||G.state==='share'||G.state==='sound';
+  if(G.state==='title'||(ovS&&ovPrev==='title')){drawTitle();ctx.drawImage(vignette,0,0,W,H);return}
+  if(ovS){renderWorld();ctx.drawImage(vignette,0,0,W,H);return}
   if(G.state==='cut'){drawCut();ctx.drawImage(vignette,0,0,W,H);return}
   renderWorld();ctx.drawImage(vignette,0,0,W,H);drawHUD();
   if(G.state==='roster')drawRoster();else if(G.state==='levelup')drawLevelUp();else if(G.state==='dead')drawDead();else if(G.state==='map')drawMap();else if(G.state==='pause')drawPause();

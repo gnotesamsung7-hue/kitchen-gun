@@ -1,13 +1,17 @@
 package com.markdave.kitchengun;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -22,6 +26,9 @@ public class MainActivity extends Activity {
     private WebView web;
     private TextToSpeech tts;
     private volatile boolean ttsReady = false;
+    private PermissionRequest pendingMic;
+    private ValueCallback<Uri[]> fileCallback;
+    private static final int REQ_MIC = 7, REQ_FILE = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,39 @@ public class MainActivity extends Activity {
         s.setAllowFileAccess(true);
         s.setMediaPlaybackRequiresUserGesture(false);
 
-        web.setWebChromeClient(new WebChromeClient());
+        web.setWebChromeClient(new WebChromeClient() {
+            // Sound Studio: microphone recording
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                runOnUiThread(() -> {
+                    boolean audio = false;
+                    for (String r : request.getResources()) {
+                        if (PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(r)) audio = true;
+                    }
+                    if (!audio) { request.deny(); return; }
+                    if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                        request.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
+                    } else {
+                        pendingMic = request;
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQ_MIC);
+                    }
+                });
+            }
+
+            // Sound Studio: "upload file" button
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                if (fileCallback != null) fileCallback.onReceiveValue(null);
+                fileCallback = callback;
+                try {
+                    startActivityForResult(params.createIntent(), REQ_FILE);
+                } catch (Exception e) {
+                    fileCallback = null;
+                    return false;
+                }
+                return true;
+            }
+        });
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -84,6 +123,22 @@ public class MainActivity extends Activity {
             if (!ttsReady || tts == null) return false;
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "kitchengun");
             return true;
+        }
+
+        @JavascriptInterface
+        public boolean speakEx(String text, double pitch, double rate) {
+            if (!ttsReady || tts == null) return false;
+            tts.setPitch((float) pitch);
+            tts.setSpeechRate((float) rate);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "kitchengun-line");
+            tts.setPitch(0.7f);
+            tts.setSpeechRate(1.15f);
+            return true;
+        }
+
+        @JavascriptInterface
+        public void stopSpeak() {
+            if (tts != null) tts.stop();
         }
 
         @JavascriptInterface
@@ -127,6 +182,29 @@ public class MainActivity extends Activity {
         super.onResume();
         if (web != null) web.onResume();
         hideSystemUi();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode == REQ_MIC && pendingMic != null) {
+            if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
+                pendingMic.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
+            } else {
+                pendingMic.deny();
+            }
+            pendingMic = null;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_FILE && fileCallback != null) {
+            fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+            fileCallback = null;
+        }
     }
 
     @Override
